@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://wjcuxv8i0u5s"]
+
+[ext_resource type="Script" path="res://SimpleControls.cs" id="1_5pok8"]
+[ext_resource type="Script" path="res://OutlineDraw.cs" id="1_dojiw"]
+[ext_resource type="ArrayMesh" uid="uid://lfrhvju3w3pw" path="res://TestModel.obj" id="2_sr2i6"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.43258)
+
+[node name="Pivot" type="Node3D" parent="."]
+script = ExtResource("1_5pok8")
+
+[node name="TestModel" type="MeshInstance3D" parent="Pivot"]
+mesh = ExtResource("2_sr2i6")
+skeleton = NodePath("../..")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dojiw")
+meshPath = NodePath("../Pivot/TestModel")
