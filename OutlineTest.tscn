@@ -11,6 +11,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.43258)
 
 [node name="Pivot" type="Node3D" parent="."]
 script = ExtResource("1_5pok8")
+rotationPerSecond = 0.1
 
 [node name="TestModel" type="MeshInstance3D" parent="Pivot"]
 mesh = ExtResource("2_sr2i6")

@@ -11,6 +11,7 @@ public partial class OutlineDraw : Control
 
     private List<Vector3> points = new();
     private List<List<Vector3>> triangleLines = new();
+    public List<Shape> shapes = new();
 
     private Color[] colors = new Color[] {
         Colors.AliceBlue,
@@ -183,7 +184,24 @@ public partial class OutlineDraw : Control
         }
         */
 
-        GeneratePoints(vertexArray, indexArray);
+        //GeneratePoints(vertexArray, indexArray);
+
+        // TODO: use result
+        shapes = OutlineCalculator.GenerateOutlines(vertexArray, indexArray);
+
+        var rand = new Random();
+        foreach (var shape in shapes) 
+        {
+            var r = rand.Next(0, colors.Length);
+            shape.color = colors[r];
+        }
+        /*
+        foreach (var shape in shapes)
+        {
+            triangleLines.Add(shape.points);
+        }
+        */
+
         return;
 
         // TODO: are the arrays always at the same indices? or depending on the format? the exporter?
@@ -261,7 +279,7 @@ public partial class OutlineDraw : Control
     {
         for (int i = 0; i < indices.Length; i += 3)
         {
-            GD.Print($"index: {i}, vertices count: {vertices.Length}");
+            //GD.Print($"index: {i}, vertices count: {vertices.Length}");
 
             var i1 = indices[i];
             var i2 = indices[i + 1];
@@ -342,11 +360,32 @@ public partial class OutlineDraw : Control
 
     public override void _Draw()
     {
-        GD.Print($"Drawing {points.Count} points");
+        //GD.Print($"Drawing {points.Count} points");
         var random = new Random();
 
         var camera = GetViewport().GetCamera3D();
         var transform = meshInstance.GlobalTransform;
+
+        foreach (var shape in shapes)
+        {
+            var points2d = new List<Vector2>();
+            foreach (var point in shape.points)
+            {
+                var pGlobal = transform * point; 
+                var p2d = camera.UnprojectPosition(pGlobal);
+                points2d.Add(p2d);
+            }
+
+			//var r = random.Next(0, colors.Length);
+            var color = shape.color; //Colors.White.Blend(Colors.Transparent); //colors[r];
+
+			for (int p = 0; p < points2d.Count - 1; p++)
+            {
+                DrawLine(points2d[p], points2d[p + 1], color);
+            }
+		}
+
+        return;
 
         for (int t = 0; t < triangleLines.Count; t++)
         {
